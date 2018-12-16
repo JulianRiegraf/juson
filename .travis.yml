@@ -1,4 +1,8 @@
 language: java
 sudo: false
 jdk: openjdk11
-script: mvn clean verify
+
+script:
+- mvn clean verify
+after_success:
+- mvn coveralls:report
