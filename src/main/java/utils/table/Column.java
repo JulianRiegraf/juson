@@ -36,4 +36,12 @@ public class Column {
   public String toString() {
     return name + " " + datatype + getPreisionString() + getDefaultString();
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Column) {
+      return ((Column) obj).name.equalsIgnoreCase(this.name) ? true : false;
+    }
+    return super.equals(obj);
+  }
 }
