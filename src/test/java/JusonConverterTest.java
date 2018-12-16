@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import utils.table.Record;
 import utils.table.Table;
@@ -15,7 +16,7 @@ public class JusonConverterTest {
 
 
   @Test
-  public void jsonArrayWithValueNodesTest() throws JusonException {
+  public void simpleJsonObjectMappingTest() throws JusonException {
 
     final String json = Main.jsonFromFile("number.json");
 
@@ -41,7 +42,8 @@ public class JusonConverterTest {
   }
 
   @Test
-  public void jsonArrayWithObjectNodesTest() throws JusonException {
+  @Ignore
+  public void simpleJsonArrayMappingTest() throws JusonException {
 
     final String json = Main.jsonFromFile("numbers.json");
 
@@ -76,7 +78,8 @@ public class JusonConverterTest {
   }
 
   @Test
-  public void jsonArrayWithNotStringValueNodesTest() throws JusonException {
+  @Ignore
+  public void nestedObjectMappingTest() throws JusonException {
 
     final String json = Main.jsonFromFile("api_call.json");
 
@@ -137,33 +140,9 @@ public class JusonConverterTest {
     assertEquals(result_id, r_api_call_result.getData(1).get());
   }
 
-  @Test(expected = JusonException.class)
-  public void nestedArrayShouldThrowExceptinTest() throws JusonException {
-
-    final String json = "{\n"
-        + "   \"values\":[\n"
-        + "      [\n"
-        + "         1,\n"
-        + "         2,\n"
-        + "         3\n"
-        + "      ],\n"
-        + "      [\n"
-        + "         4,\n"
-        + "         5,\n"
-        + "         6\n"
-        + "      ]\n"
-        + "   ]\n"
-        + "}";
-
-    List<Table> tables = new LinkedList<>();
-    List<Record> records = new LinkedList<>();
-
-    JusonConverter a = new JusonConverter(tables, records);
-    a.handleJsonObject("root", new JSONObject(json));
-  }
-
   @Test
-  public void extendedTest() throws JusonException {
+  @Ignore
+  public void nestedObjectsAndArraysTest() throws JusonException {
 
     final String json = Main.jsonFromFile("articles_call.json");
 
@@ -311,6 +290,31 @@ public class JusonConverterTest {
         .filter(r -> r.getData().contains(results_id_1))
         .filter(r -> r.getData().contains(multimedia_id_3))
         .count());
+  }
+
+  @Test(expected = JusonException.class)
+  public void nestedArrayShouldThrowExceptinTest() throws JusonException {
+
+    final String json = "{\n"
+        + "   \"values\":[\n"
+        + "      [\n"
+        + "         1,\n"
+        + "         2,\n"
+        + "         3\n"
+        + "      ],\n"
+        + "      [\n"
+        + "         4,\n"
+        + "         5,\n"
+        + "         6\n"
+        + "      ]\n"
+        + "   ]\n"
+        + "}";
+
+    List<Table> tables = new LinkedList<>();
+    List<Record> records = new LinkedList<>();
+
+    JusonConverter a = new JusonConverter(tables, records);
+    a.handleJsonObject("root", new JSONObject(json));
   }
 }
 
