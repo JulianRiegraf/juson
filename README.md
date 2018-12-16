@@ -3,8 +3,7 @@ A simple JSON to PostgreSQL mapper.
 
 Status: **`DEVELOPMENT`**
 
-[![Build Status](https://travis-ci.com/JulianRiegraf/postjson.svg?token=ziwkzZeesRqGqDpdiqQf&branch=master)](https://travis-ci.com/JulianRiegraf/postjson)
-
+[![Build Status](https://travis-ci.com/JulianRiegraf/juson.svg?branch=master)](https://travis-ci.com/JulianRiegraf/juson)
 ## Simple JSON object mapping
 
 *number.json*
@@ -69,22 +68,15 @@ Status: **`DEVELOPMENT`**
 
 **api_call**
 
-| api_call_id | status |
-| ----------- | ------ |
-| 1001        | OK     |
-
-**api_call_result**
-
-| api_call_id | result_id |
-| ----------- | --------- |
-| 1001        | 2001      |
-
+| status | result_id |
+| ------ | --------- |
+| OK     | 1001      |
 
 **result**
 
 | result_id | type   | positiv | value |
 | --------- | ------ | ------- | ----- |
-| 2001      | double | true    | 1.2   |
+| 1001      | double | true    | 1.2   |
 
 ## Nested objects and arrays
 

@@ -1,4 +1,4 @@
-package utils.table;
+package de.riegraf.juson.utils.table;
 
 /**
  * Represents a column in a database table. Does NOT hold any data.

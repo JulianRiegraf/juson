@@ -33,8 +33,7 @@
           "format": "Normal",
           "height": 132,
           "width": 190,
-          "type": "image",
-          "file": "png"
+          "type": "image"
         },
         {
           "format": "mediumThreeByTwo210",

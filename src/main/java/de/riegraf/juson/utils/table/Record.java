@@ -1,4 +1,4 @@
-package utils.table;
+package de.riegraf.juson.utils.table;
 
 import java.util.ArrayList;
 import java.util.HashMap;

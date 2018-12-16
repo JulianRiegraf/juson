@@ -1,4 +1,4 @@
-package exception;
+package de.riegraf.juson.exception;
 
 public class JusonException extends Exception {
 

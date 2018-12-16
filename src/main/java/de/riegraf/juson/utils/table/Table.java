@@ -1,4 +1,4 @@
-package utils.table;
+package de.riegraf.juson.utils.table;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,12 +22,12 @@ public class Table {
     this.schema = schema;
   }
 
-  public boolean equals(Table that) {
-    return this.name.equals(that.name);
-  }
-
-  public boolean equals(String that) {
-    return this.name.equals(that);
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Table) {
+      return ((Table) obj).getName().equalsIgnoreCase(this.name) ? true : false;
+    }
+    return super.equals(obj);
   }
 
   public List<Column> getColumns() {
@@ -110,5 +110,9 @@ public class Table {
         .map(Entry::getValue)
         .map(c -> c.name)
         .collect(Collectors.joining(", ")) + ")";
+  }
+
+  public Column getColumn(int i) {
+    return columns.get(i);
   }
 }
