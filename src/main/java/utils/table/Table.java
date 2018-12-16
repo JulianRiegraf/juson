@@ -1,7 +1,11 @@
 package utils.table;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -11,7 +15,7 @@ public class Table {
 
   private String name;
   private String schema;
-  private List<Column> columns = new ArrayList<>();
+  private Map<Integer, Column> columns = new HashMap<>();
 
   public Table(String name, String schema) {
     this.name = name;
@@ -27,7 +31,7 @@ public class Table {
   }
 
   public List<Column> getColumns() {
-    return columns;
+    return new ArrayList<>(columns.values());
   }
 
   public String getName() {
@@ -38,13 +42,11 @@ public class Table {
     return schema;
   }
 
-  public Column getColumn(String name) {
-    for (Column c : columns) {
-      if (c.name.equals(name)) {
-        return c;
-      }
-    }
-    return null;
+  public Optional<Column> getColumn(String name) {
+    return columns.entrySet().stream()
+        .map(Entry::getValue)
+        .filter(c -> c.name.equalsIgnoreCase(name))
+        .findFirst();
   }
 
   public void addColumn(String name, String datatype, Number precision, String defaultValue) {
@@ -54,17 +56,15 @@ public class Table {
   }
 
   public void addColumn(Column newColumn) {
-    for (Column c : columns) {
-      if (c.name.equals(newColumn.name)) {
-        throw new IllegalArgumentException(
-            "Column '" + newColumn.name + "' exists already in table '" + this.name + "'");
-      }
+    if (getColumn(newColumn.name).isPresent()) {
+      throw new IllegalArgumentException(
+          "Column '" + newColumn.name + "' exists already in table '" + this.name + "'");
     }
-    columns.add(newColumn);
+    columns.put(columns.size(), newColumn);
   }
 
   public void removeColumn(String name) {
-    columns.removeIf(x -> x.name.equals(name));
+    columns.remove(getColumn(name));
   }
 
 
@@ -74,10 +74,12 @@ public class Table {
    * @return List of statements
    */
   public String getInsertSqlForPrepStatement() {
-    return "INSERT INTO " + schema + "." + name + " (" + columns.stream()
+    return "INSERT INTO " + schema + "." + name + " (" + columns.entrySet().stream()
+        .map(Entry::getValue)
         .filter(x -> x.defaultValue == null).map(e -> e.name)
         .collect(Collectors.joining(", "))
-        + ") VALUES (" + columns.stream().filter(x -> x.defaultValue == null).map(e -> "?")
+        + ") VALUES (" + columns.entrySet().stream().map(Entry::getValue)
+        .filter(x -> x.defaultValue == null).map(e -> "?")
         .collect(Collectors.joining(", ")) + ")";
   }
 
@@ -95,13 +97,18 @@ public class Table {
       return sb.append(")").toString();
     }
 
-    return columns.stream().map(e -> e.toString())
+    return columns.entrySet().stream()
+        .map(Entry::getValue)
+        .map(e -> e.toString())
         .collect(Collectors.joining(", ", sb.toString(), ")"));
   }
 
 
   @Override
   public String toString() {
-    return name + " (" + columns.stream().map(c -> c.name).collect(Collectors.joining(", ")) + ")";
+    return name + " (" + columns.entrySet().stream()
+        .map(Entry::getValue)
+        .map(c -> c.name)
+        .collect(Collectors.joining(", ")) + ")";
   }
 }
