@@ -44,13 +44,8 @@ public class JusonConverter {
       AtoB.addColumn(new Column(parent + ID_EXTENSION, DATATYPE, null, null));
       AtoB.addColumn(new Column(name + ID_EXTENSION, DATATYPE, null, null));
 
-      // Childs in array are value nodes
-      if (child0 instanceof String) {
-        table.addColumn(new Column(name.toLowerCase(), DATATYPE, null, null));
-        table.addColumn(new Column((name + ID_EXTENSION).toLowerCase(), DATATYPE, null, null));
-
-        // Nodes in array are objects
-      } else if (child0 instanceof JSONObject) {
+      // Nodes in array are objects
+      if (child0 instanceof JSONObject) {
         Iterator<String> i = ((JSONObject) child0).keys();
         while (i.hasNext()) {
           table.addColumn(new Column(i.next(), DATATYPE, null, null));
@@ -60,6 +55,11 @@ public class JusonConverter {
         // Array contains another array
       } else if (child0 instanceof JSONArray) {
         throw new JusonException("Nested arrays can not be mapped.");
+
+        // Childs in array are value nodes
+      } else {
+        table.addColumn(new Column(name.toLowerCase(), DATATYPE, null, null));
+        table.addColumn(new Column((name + ID_EXTENSION).toLowerCase(), DATATYPE, null, null));
       }
       tables.add(AtoB);
       tables.add(table);
@@ -67,19 +67,8 @@ public class JusonConverter {
 
     for (int i = 0; i < jArray.length(); i++) {
 
-      if (child0 instanceof String) {
-        Record r = new Record(getTable(name).get());
-        String newId = getId();
-        addDataToRecords(r, name, (String) jArray.get(i));
-        addDataToRecords(r, name, newId);
-
-        Table aTOb = getTable(parent + "_" + name).get();
-        r = new Record(aTOb);
-        addDataToRecords(r, aTOb.getName(), id);
-        addDataToRecords(r, aTOb.getName(), newId);
-
-        // Nodes in array are objects
-      } else if (child0 instanceof JSONObject) {
+      // Nodes in array are objects
+      if (child0 instanceof JSONObject) {
         String newId = getId();
         JSONObject jsonobj = (JSONObject) jArray.get(i);
         jsonobj.put(name + ID_EXTENSION, newId);
@@ -90,6 +79,16 @@ public class JusonConverter {
         addDataToRecords(r, aTOb.getName(), id);
         addDataToRecords(r, aTOb.getName(), newId);
 
+      } else {
+        Record r = new Record(getTable(name).get());
+        String newId = getId();
+        addDataToRecords(r, name, jArray.get(i).toString());
+        addDataToRecords(r, name, newId);
+
+        Table aTOb = getTable(parent + "_" + name).get();
+        r = new Record(aTOb);
+        addDataToRecords(r, aTOb.getName(), id);
+        addDataToRecords(r, aTOb.getName(), newId);
       }
     }
   }

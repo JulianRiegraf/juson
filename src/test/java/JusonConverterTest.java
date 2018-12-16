@@ -63,6 +63,51 @@ public class JusonConverterTest {
   }
 
   @Test
+  public void jsonArrayWithNotStringValueNodesTest() throws JusonException {
+
+    final String json = "{\n"
+        + "   \"values\":[1.1, 1.2, 1.3]\n"
+        + "}";
+
+    List<Table> tables = new LinkedList<>();
+    List<Record> records = new LinkedList<>();
+
+    JusonConverter a = new JusonConverter(tables, records);
+    a.handleJsonObject("root", new JSONObject(json));
+
+    Main.printTablesAndRecords(tables, records);
+
+    assertEquals(3, tables.size());
+    assertEquals(7, records.size());
+
+  }
+
+  @Test(expected = JusonException.class)
+  public void nestedArrayShouldThrowExceptinTest() throws JusonException {
+
+    final String json = "{\n"
+        + "   \"values\":[\n"
+        + "      [\n"
+        + "         1,\n"
+        + "         2,\n"
+        + "         3\n"
+        + "      ],\n"
+        + "      [\n"
+        + "         4,\n"
+        + "         5,\n"
+        + "         6\n"
+        + "      ]\n"
+        + "   ]\n"
+        + "}";
+
+    List<Table> tables = new LinkedList<>();
+    List<Record> records = new LinkedList<>();
+
+    JusonConverter a = new JusonConverter(tables, records);
+    a.handleJsonObject("root", new JSONObject(json));
+  }
+
+  @Test
   public void extendedTest() throws JusonException {
 
     final String json = "{\n"
