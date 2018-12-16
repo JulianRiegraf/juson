@@ -75,16 +75,16 @@ Status: **`DEVELOPMENT`**
 
 **api_call_result**
 
-| result_id | api_call_id |
-| --------- | ----------- |
-| 1001      | 2001        |
+| api_call_id | result_id |
+| ----------- | --------- |
+| 1001        | 2001      |
 
 
 **result**
 
 | result_id | type   | positiv | value |
 | --------- | ------ | ------- | ----- |
-| 1001      | double | true    | 1.2   |
+| 2001      | double | true    | 1.2   |
 
 ## Nested objects and arrays
 
