@@ -17,6 +17,13 @@ public class Column {
     this.defaultValue = defaultValue;
   }
 
+  public Column(String name, String datatype) {
+    this.name = name;
+    this.datatype = datatype;
+    this.precision = null;
+    this.defaultValue = null;
+  }
+
   private String getDefaultString() {
     return defaultValue == null ? "" : " DEFAULT '" + defaultValue + "'";
   }

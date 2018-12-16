@@ -41,16 +41,16 @@ public class JusonConverter {
     if (getTable(name).isEmpty()) {
       Table table = new Table(name.toLowerCase(), "json");
       Table AtoB = new Table(parent + "_" + name, "json");
-      AtoB.addColumn(new Column(parent + ID_EXTENSION, DATATYPE, null, null));
-      AtoB.addColumn(new Column(name + ID_EXTENSION, DATATYPE, null, null));
+      AtoB.addColumn(new Column(parent + ID_EXTENSION, DATATYPE));
+      AtoB.addColumn(new Column(name + ID_EXTENSION, DATATYPE));
 
       // Nodes in array are objects
       if (child0 instanceof JSONObject) {
         Iterator<String> i = ((JSONObject) child0).keys();
         while (i.hasNext()) {
-          table.addColumn(new Column(i.next(), DATATYPE, null, null));
+          table.addColumn(new Column(i.next(), DATATYPE));
         }
-        table.addColumn(new Column((name + ID_EXTENSION).toLowerCase(), DATATYPE, null, null));
+        table.addColumn(new Column((name + ID_EXTENSION).toLowerCase(), DATATYPE));
 
         // Array contains another array
       } else if (child0 instanceof JSONArray) {
@@ -58,8 +58,8 @@ public class JusonConverter {
 
         // Childs in array are value nodes
       } else {
-        table.addColumn(new Column(name.toLowerCase(), DATATYPE, null, null));
-        table.addColumn(new Column((name + ID_EXTENSION).toLowerCase(), DATATYPE, null, null));
+        table.addColumn(new Column(name.toLowerCase(), DATATYPE));
+        table.addColumn(new Column((name + ID_EXTENSION).toLowerCase(), DATATYPE));
       }
       tables.add(AtoB);
       tables.add(table);
@@ -104,9 +104,9 @@ public class JusonConverter {
         Object o = jObject.get(arr.getString(j));
         if (o instanceof JSONObject | o instanceof JSONArray) {
           table.addColumn(
-              new Column((arr.getString(j) + ID_EXTENSION).toLowerCase(), DATATYPE, null, null));
+              new Column((arr.getString(j) + ID_EXTENSION).toLowerCase(), DATATYPE));
         } else {
-          table.addColumn(new Column(arr.getString(j).toLowerCase(), DATATYPE, null, null));
+          table.addColumn(new Column(arr.getString(j).toLowerCase(), DATATYPE));
         }
       }
       tables.add(table);
