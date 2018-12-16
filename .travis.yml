@@ -4,5 +4,3 @@ jdk: openjdk11
 
 script:
 - mvn clean verify
-after_success:
-- mvn coveralls:report
