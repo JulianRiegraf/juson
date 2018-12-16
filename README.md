@@ -51,7 +51,7 @@ A simple JSON to PostgreSQL mapper.
 | int    | true    | 2     |
 | double | false   | -1.2  |
 
-## Object Mapping
+## Nested object mapping
 
 *api_call.json*
 ```JSON
@@ -71,7 +71,7 @@ A simple JSON to PostgreSQL mapper.
 | ----------- | ------ |
 | 1001        | OK     |
 
-**api_call_results**
+**api_call_result**
 
 | result_id | api_call_id |
 | --------- | ----------- |
@@ -84,7 +84,7 @@ A simple JSON to PostgreSQL mapper.
 | --------- | ------ | ------- | ----- |
 | 1001      | double | true    | 1.2   |
 
-## Array on object mapping
+## Array in object mapping
 
 *numbers.json*
 ```JSON
