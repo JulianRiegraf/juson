@@ -1,0 +1,17 @@
+[
+  {
+    "type":"double",
+    "positiv":true,
+    "value":12
+  },
+  {
+    "type":"int",
+    "positiv":true,
+    "value":2
+  },
+  {
+    "type":"double",
+    "positiv":false,
+    "value":-1.2
+  }
+]

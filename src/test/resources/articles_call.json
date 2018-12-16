@@ -1,0 +1,48 @@
+{
+  "status": "OK",
+  "last_updated": "2018-12-15T17:27:12-05:00",
+  "num_results": 2,
+  "results": [
+    {
+      "section": "World",
+      "title": "Fancy title here",
+      "item_type": "Article",
+      "published_date": "2018-12-15T12:05:59-05:00",
+      "multimedia": [
+        {
+          "format": "Standard Thumbnail",
+          "height": 75,
+          "width": 75,
+          "type": "image"
+        },
+        {
+          "format": "thumbLarge",
+          "height": 150,
+          "width": 150,
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "section": "Europe",
+      "item_type": "Article",
+      "title": "Another fancy title",
+      "published_date": "2018-12-15T16:41:18-05:00",
+      "multimedia": [
+        {
+          "format": "Normal",
+          "height": 132,
+          "width": 190,
+          "type": "image",
+          "file": "png"
+        },
+        {
+          "format": "mediumThreeByTwo210",
+          "height": 140,
+          "width": 210,
+          "type": "photo"
+        }
+      ]
+    }
+  ]
+}
