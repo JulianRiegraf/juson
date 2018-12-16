@@ -3,9 +3,88 @@ A simple JSON to PostgreSQL mapper.
 
 [![Build Status](https://travis-ci.com/JulianRiegraf/postjson.svg?token=ziwkzZeesRqGqDpdiqQf&branch=master)](https://travis-ci.com/JulianRiegraf/postjson)
 
-## Array Mapping
+## Simple JSON object mapping
 
-juson mapps a JOSN like this:
+*number.json*
+```JSON
+{
+   "type":"double",
+   "positiv":true,
+   "value":1.2
+}
+```
+
+**number**
+
+| type   | positiv | value |
+| ------ | ------- | ----- |
+| double | true    | 1.2   |
+
+## Simple JSON array mapping
+
+*numbers.json*
+```JSON
+[
+   {
+      "type":"double",
+      "positiv":true,
+      "value":12
+   },
+   {
+      "type":"int",
+      "positiv":true,
+      "value":2
+   },
+   {
+      "type":"double",
+      "positiv":false,
+      "value":-1.2
+   }
+]
+```
+
+**numbers**
+
+| type   | positiv | value |
+| ------ | ------- | ----- |
+| double | true    | 1.2   |
+| int    | true    | 2     |
+| double | false   | -1.2  |
+
+## Object Mapping
+
+*api_call.json*
+```JSON
+{
+   "status":"OK",
+   "result":{
+      "type":"double",
+      "positiv":true,
+      "value":1.2
+   }
+}
+```
+
+**api_call**
+
+| api_call_id | status |
+| ----------- | ------ |
+| 1001        | OK     |
+
+**api_call_results**
+
+| result_id | api_call_id |
+| --------- | ----------- |
+| 1001      | 2001        |
+
+
+**result**
+
+| result_id | type   | positiv | value |
+| --------- | ------ | ------- | ----- |
+| 1001      | double | true    | 1.2   |
+
+## Array on object mapping
 
 *numbers.json*
 ```JSON
@@ -22,8 +101,6 @@ juson mapps a JOSN like this:
    ]
 }
 ```
-
-into the following database tables:
 
 **numbers**
 
