@@ -31,7 +31,6 @@ Status: **`DEVELOPMENT`**
     } catch (JusonException e) {
       e.printStackTrace();
     }
-
   }
 ```
 
