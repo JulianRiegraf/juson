@@ -131,7 +131,6 @@ public class JusonConverterTest {
         new Column("value", "")))
     );
 
-
     Record r_api_call = records.stream()
         .filter(r -> r.getTable().getName().equals("api_call"))
         .findFirst()
@@ -152,7 +151,7 @@ public class JusonConverterTest {
   }
 
   @Test
-  public void nestedObjectsAndArraysTest() throws JusonException, IOException {
+  public void nestedObjectsAndArraysDataTest() throws JusonException, IOException {
 
     final String filename = "articles_call.json";
     final String json = jsonFromFile(filename);
@@ -164,7 +163,6 @@ public class JusonConverterTest {
 
     Main.printTablesAndRecords(tables, records);
 
-    assertEquals(5, tables.size());
     assertEquals(13, records.size());
 
     int index_articles_call = tables.indexOf(new Table("articles_call", null));
@@ -172,53 +170,6 @@ public class JusonConverterTest {
     int index_multimedia = tables.indexOf(new Table("multimedia", null));
     int index_articles_call_results = tables.indexOf(new Table("articles_call_results", null));
     int index_results_multimedia = tables.indexOf(new Table("results_multimedia", null));
-
-    assertNotEquals(-1, index_articles_call);
-    assertNotEquals(-1, index_results);
-    assertNotEquals(-1, index_multimedia);
-    assertNotEquals(-1, index_articles_call_results);
-    assertNotEquals(-1, index_results_multimedia);
-
-    assertEquals(4, tables.get(index_articles_call).getColumns().size());
-    assertEquals(5, tables.get(index_results).getColumns().size());
-    assertEquals(5, tables.get(index_multimedia).getColumns().size());
-    assertEquals(2, tables.get(index_articles_call_results).getColumns().size());
-    assertEquals(2, tables.get(index_results_multimedia).getColumns().size());
-
-    assertTrue(tables.get(index_articles_call).getColumns().containsAll(Arrays.asList(
-        new Column("articles_call_id", ""),
-        new Column("status", ""),
-        new Column("last_updated", ""),
-        new Column("num_results", "")))
-    );
-
-    assertTrue(tables.get(index_results).getColumns().containsAll(Arrays.asList(
-        new Column("results_id", ""),
-        new Column("section", ""),
-        new Column("title", ""),
-        new Column("item_type", ""),
-        new Column("published_date", "")))
-    );
-
-    assertTrue(tables.get(index_multimedia).getColumns().containsAll(Arrays.asList(
-        new Column("multimedia_id", ""),
-        new Column("format", ""),
-        new Column("height", ""),
-        new Column("width", ""),
-        new Column("type", "")))//,
-        //new Column("file", "")))
-    );
-
-    assertTrue(tables.get(index_articles_call_results).getColumns().containsAll(Arrays.asList(
-        new Column("articles_call_id", ""),
-        new Column("results_id", "")))
-    );
-
-
-    assertTrue(tables.get(index_results_multimedia).getColumns().containsAll(Arrays.asList(
-        new Column("results_id", ""),
-        new Column("multimedia_id", "")))
-    );
 
     Map<Table, List<Record>> record_map = records.stream()
         .collect(Collectors.groupingBy(Record::getTable));
@@ -317,6 +268,76 @@ public class JusonConverterTest {
         .filter(r -> r.getData().contains(results_id_1))
         .filter(r -> r.getData().contains(multimedia_id_3))
         .count());
+  }
+
+  @Test
+  public void nestedObjectsAndArraysStructureTest() throws JusonException, IOException {
+
+    final String filename = "articles_call.json";
+    final String json = jsonFromFile(filename);
+
+    JusonConverter a = new JusonConverter();
+    Database db = a.convert(filename, json);
+    List<Table> tables = db.getTables();
+    List<Record> records = db.getRecords();
+
+    Main.printTablesAndRecords(tables, records);
+
+    assertEquals(5, tables.size());
+
+    int index_articles_call = tables.indexOf(new Table("articles_call", null));
+    int index_results = tables.indexOf(new Table("results", null));
+    int index_multimedia = tables.indexOf(new Table("multimedia", null));
+    int index_articles_call_results = tables.indexOf(new Table("articles_call_results", null));
+    int index_results_multimedia = tables.indexOf(new Table("results_multimedia", null));
+
+    assertNotEquals(-1, index_articles_call);
+    assertNotEquals(-1, index_results);
+    assertNotEquals(-1, index_multimedia);
+    assertNotEquals(-1, index_articles_call_results);
+    assertNotEquals(-1, index_results_multimedia);
+
+    assertEquals(4, tables.get(index_articles_call).getColumns().size());
+    assertEquals(5, tables.get(index_results).getColumns().size());
+    assertEquals(5, tables.get(index_multimedia).getColumns().size());
+    assertEquals(2, tables.get(index_articles_call_results).getColumns().size());
+    assertEquals(2, tables.get(index_results_multimedia).getColumns().size());
+
+    assertTrue(tables.get(index_articles_call).getColumns().containsAll(Arrays.asList(
+        new Column("articles_call_id", ""),
+        new Column("status", ""),
+        new Column("last_updated", ""),
+        new Column("num_results", "")))
+    );
+
+    assertTrue(tables.get(index_results).getColumns().containsAll(Arrays.asList(
+        new Column("results_id", ""),
+        new Column("section", ""),
+        new Column("title", ""),
+        new Column("item_type", ""),
+        new Column("published_date", "")))
+    );
+
+    assertTrue(tables.get(index_multimedia).getColumns().containsAll(Arrays.asList(
+        new Column("multimedia_id", ""),
+        new Column("format", ""),
+        new Column("height", ""),
+        new Column("width", ""),
+        new Column("type", "")))//,
+        //new Column("file", "")))
+    );
+
+    assertTrue(tables.get(index_articles_call_results).getColumns().containsAll(Arrays.asList(
+        new Column("articles_call_id", ""),
+        new Column("results_id", "")))
+    );
+
+    assertTrue(tables.get(index_results_multimedia).getColumns().containsAll(Arrays.asList(
+        new Column("results_id", ""),
+        new Column("multimedia_id", "")))
+    );
+
+
   }
 
   @Test(expected = JusonException.class)
