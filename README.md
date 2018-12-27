@@ -1,5 +1,5 @@
 # JUSON
-A simple JSON to relational database mapper.
+A simple JSON to relational de.riegraf.juson.database mapper.
 
 Status: **`DEVELOPMENT`**
 
@@ -9,7 +9,30 @@ Status: **`DEVELOPMENT`**
 * PostgreSQL
 
 ### Usage
-todo
+```Java
+  public static void main(final String[] args){
+    String filename = "world.json";
+    String path = "/home/julian/IdeaProjects/juson/src/test/resources/" + filename;
+
+    try {
+      String json = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
+      PostgreSQL postgreSQL = new PostgreSQL("localhost:5432", "postgres", "password");
+      postgreSQL.executeSQL("DROP SCHEMA IF EXISTS json CASCADE");
+      postgreSQL.executeSQL("CREATE SCHEMA json");
+      new Juson("world", json, postgreSQL);
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (JusonException e) {
+      e.printStackTrace();
+    }
+
+  }
+```
 
 ### Examples
 #### Simple JSON object mapping
