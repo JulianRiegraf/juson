@@ -29,17 +29,20 @@ public class Main {
 
     //final String json = new JiraCaller().call().get();
 
-    String filename = "C:/Users/julia/Desktop/json.json";
-    String json = new String(Files.readAllBytes(Paths.get(filename)), StandardCharsets.UTF_8);
+    String filename = "articles_call.json";
+    String path = "/home/julian/IdeaProjects/juson/src/test/resources/" + filename;
+    String json = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
 
-    List<Table> tables = new LinkedList<>();
-    List<Record> records = new LinkedList<>();
 
     JusonConverter a = new JusonConverter();
-    a.convert("json", json);
+    JusonConverter.Database db = a.convert(filename, json);
+
+    List<Table> tables = db.getTables();
+    List<Record> records = db.getRecords();
+
     printTablesAndRecords(tables, records);
 
-    PostgreSQL postgreSQL = new PostgreSQL("localhost:5432", "postgres", "postgres");
+    PostgreSQL postgreSQL = new PostgreSQL("localhost:5432", "postgres", "docker");
     postgreSQL.executeSQL("DROP SCHEMA IF EXISTS json CASCADE");
     postgreSQL.executeSQL("CREATE SCHEMA json");
 
@@ -60,14 +63,14 @@ public class Main {
             .filter(r -> r.getTable().equals(table))
             .collect(Collectors.toList());
 
-        insertRecords(recordOfTable, table, p);
+        insertRecords(recordOfTable, p);
       } catch (SQLException e) {
         e.printStackTrace();
       }
     });
   }
 
-  private static void insertRecords(List<Record> records, Table table, PreparedStatement p) {
+  private static void insertRecords(List<Record> records, PreparedStatement p) {
     try {
       for (Record r : records) {
         for (int i = 0; i < r.getTable().getColumns().size(); i++) {
