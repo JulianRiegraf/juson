@@ -1,5 +1,5 @@
 # JUSON
-A simple JSON to relational de.riegraf.juson.database mapper.
+A simple JSON to relational database mapper.
 
 Status: **`DEVELOPMENT`**
 
