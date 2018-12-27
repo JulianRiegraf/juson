@@ -25,9 +25,14 @@ public class JusonConverter {
 
   private static final String DATATYPE = "TEXT";
   private static final String ID_EXTENSION = "_id";
+  private String schema;
 
   List<Table> tables = new LinkedList<>();
   List<Record> records = new LinkedList<>();
+
+  public JusonConverter(String schema) {
+    this.schema = schema;
+  }
 
   public Database convert(String filename, String json) throws JusonException {
 
@@ -52,7 +57,7 @@ public class JusonConverter {
 
     // Crate table
     if (getTable(name).isEmpty()) {
-      Table table = new Table(name.toLowerCase(), "json");
+      Table table = new Table(name.toLowerCase(), schema);
       if (parentName != null) {
         createAssignmentTable(name, parentName);
       }
@@ -128,7 +133,7 @@ public class JusonConverter {
   }
 
   private void createAssignmentTable(String name, String parent) {
-    Table AtoB = new Table(parent + "_" + name, "json");
+    Table AtoB = new Table(parent + "_" + name, schema);
     AtoB.addColumn(new Column(parent + ID_EXTENSION, DATATYPE));
     AtoB.addColumn(new Column(name + ID_EXTENSION, DATATYPE));
     tables.add(AtoB);
@@ -140,7 +145,7 @@ public class JusonConverter {
     // Create table
     if (getTable(jsonName).isEmpty()) {
       JSONArray arr = jObject.names();
-      Table table = new Table(jsonName.toLowerCase(), "json");
+      Table table = new Table(jsonName.toLowerCase(), schema);
       for (int j = 0; j < arr.length(); j++) {
         Object o = jObject.get(arr.getString(j));
         if (o instanceof JSONObject) {

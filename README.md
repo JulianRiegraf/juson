@@ -11,15 +11,16 @@ Status: **`DEVELOPMENT`**
 ### Usage
 ```Java
   public static void main(final String[] args){
-    String filename = "world.json";
-    String path = "/home/julian/IdeaProjects/juson/src/test/resources/" + filename;
+    final String filename = "world.json";
+    final String path = "/home/julian/IdeaProjects/juson/src/test/resources/" + filename;
+    final String schema = "fromJson";
 
     try {
-      String json = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
-      PostgreSQL postgreSQL = new PostgreSQL("localhost:5432", "postgres", "password");
-      postgreSQL.executeSQL("DROP SCHEMA IF EXISTS json CASCADE");
-      postgreSQL.executeSQL("CREATE SCHEMA json");
-      new Juson("world", json, postgreSQL);
+      final String json = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
+      PostgreSQL postgreSQL = new PostgreSQL("localhost:5432", "postgres", "docker");
+      postgreSQL.executeSQL("DROP SCHEMA IF EXISTS " + schema + " CASCADE");
+      postgreSQL.executeSQL("CREATE SCHEMA " + schema);
+      new Juson(filename, json, postgreSQL, schema);
 
     } catch (SQLException e) {
       e.printStackTrace();

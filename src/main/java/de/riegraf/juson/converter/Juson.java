@@ -21,9 +21,9 @@ import org.json.JSONTokener;
 
 public class Juson {
 
-  public Juson(String rootName, String json, PostgreSQL postgre) throws JusonException, SQLException, ClassNotFoundException {
+  public Juson(String rootName, String json, PostgreSQL postgre, String schema) throws JusonException, SQLException, ClassNotFoundException {
 
-    JusonConverter jusonConverter = new JusonConverter();
+    JusonConverter jusonConverter = new JusonConverter(schema);
     JusonConverter.Database db = jusonConverter.convert(rootName, json);
 
     List<Table> tables = db.getTables();
@@ -94,24 +94,17 @@ public class Juson {
             + ")").collect(Collectors.joining("\n"));
   }
 
-  public static String jsonFromFile(String resourceName) {
-    InputStream is = Juson.class.getResourceAsStream(resourceName);
-    if (is == null) {
-      throw new NullPointerException("Cannot find resource file " + resourceName);
-    }
-    return new JSONObject(new JSONTokener(is)).toString();
-  }
-
   public static void main(final String[] args){
-    String filename = "world.json";
-    String path = "/home/julian/IdeaProjects/juson/src/test/resources/" + filename;
+    final String filename = "world.json";
+    final String path = "/home/julian/IdeaProjects/juson/src/test/resources/" + filename;
+    final String schema = "fromJson";
 
     try {
-      String json = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
+      final String json = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
       PostgreSQL postgreSQL = new PostgreSQL("localhost:5432", "postgres", "docker");
-      postgreSQL.executeSQL("DROP SCHEMA IF EXISTS json CASCADE");
-      postgreSQL.executeSQL("CREATE SCHEMA json");
-      new Juson("world", json, postgreSQL);
+      postgreSQL.executeSQL("DROP SCHEMA IF EXISTS " + schema + " CASCADE");
+      postgreSQL.executeSQL("CREATE SCHEMA " + schema);
+      new Juson(filename, json, postgreSQL, schema);
 
     } catch (SQLException e) {
       e.printStackTrace();

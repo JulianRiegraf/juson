@@ -35,7 +35,7 @@ public class JusonConverterTest {
     final String filename = "number.json";
     final String json = jsonFromFile(filename);
 
-    JusonConverter a = new JusonConverter();
+    JusonConverter a = new JusonConverter("json");
     Database db = a.convert(filename, json);
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
@@ -62,7 +62,7 @@ public class JusonConverterTest {
     final String filename = "numbers.json";
     final String json = jsonFromFile(filename);
 
-    JusonConverter a = new JusonConverter();
+    JusonConverter a = new JusonConverter("json");
     Database db = a.convert(filename, json);
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
@@ -99,7 +99,7 @@ public class JusonConverterTest {
     final String filename = "api_call.json";
     final String json = jsonFromFile(filename);
 
-    JusonConverter a = new JusonConverter();
+    JusonConverter a = new JusonConverter("json");
     Database db = a.convert(filename, json);
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
@@ -152,7 +152,7 @@ public class JusonConverterTest {
     final String filename = "articles_call.json";
     final String json = jsonFromFile(filename);
 
-    JusonConverter a = new JusonConverter();
+    JusonConverter a = new JusonConverter("json");
     Database db = a.convert(filename, json);
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
@@ -272,7 +272,7 @@ public class JusonConverterTest {
     final String filename = "articles_call.json";
     final String json = jsonFromFile(filename);
 
-    JusonConverter a = new JusonConverter();
+    JusonConverter a = new JusonConverter("json");
     Database db = a.convert(filename, json);
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
@@ -354,7 +354,7 @@ public class JusonConverterTest {
         + "   ]\n"
         + "}";
 
-    JusonConverter a = new JusonConverter();
+    JusonConverter a = new JusonConverter("json");
     Database db = a.convert("root", json);
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
