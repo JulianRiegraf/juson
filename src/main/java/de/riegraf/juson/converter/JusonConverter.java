@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +41,7 @@ public class JusonConverter {
     return new Database(tables, records);
   }
 
-  private void handleJsonArray(String name, JSONArray jArray, String parent, String id)
+  private void handleJsonArray(String name, JSONArray jArray, String parentName, String parentId)
       throws JSONException, JusonException {
 
     if (jArray.length() < 1) {
@@ -52,35 +53,28 @@ public class JusonConverter {
     // Crate table
     if (getTable(name).isEmpty()) {
       Table table = new Table(name.toLowerCase(), "json");
-      if (parent != null) {
-        createAssignmentTable(name, parent);
+      if (parentName != null) {
+        createAssignmentTable(name, parentName);
       }
 
       // Nodes in array are objects
+      // Create columns
       if (child0 instanceof JSONObject) {
         JSONObject jObject = (JSONObject) child0;
         JSONArray arr = jObject.names();
         for (int j = 0; j < arr.length(); j++) {
           Object o = jObject.get(arr.getString(j));
           if (o instanceof JSONObject) {
-            table.addColumn(
-                new Column((arr.getString(j) + ID_EXTENSION).toLowerCase(), DATATYPE));
+            table.addColumn(new Column((arr.getString(j) + ID_EXTENSION), DATATYPE));
           } else if (o instanceof JSONArray) {
-
+            // No need to create column for id, because the id is stored in an additional assignment table
           } else {
-            table.addColumn(new Column(arr.getString(j).toLowerCase(), DATATYPE));
+            table.addColumn(new Column(arr.getString(j), DATATYPE));
           }
         }
-        //  tables.add(table);
 
-//        // Create for every key a column
-//        Iterator<String> i = ((JSONObject) child0).keys();
-//        while (i.hasNext()) {
-//          table.addColumn(new Column(i.next(), DATATYPE));
-//        }
-
-        if (parent != null) {
-          table.addColumn(new Column((name + ID_EXTENSION).toLowerCase(), DATATYPE));
+        if (parentName != null) {
+          table.addColumn(new Column((name + ID_EXTENSION), DATATYPE));
         }
 
         // Array contains another array
@@ -89,41 +83,44 @@ public class JusonConverter {
 
         // Childs in array are value nodes
       } else {
-        table.addColumn(new Column(name.toLowerCase(), DATATYPE));
-        table.addColumn(new Column((name + ID_EXTENSION).toLowerCase(), DATATYPE));
+        table.addColumn(new Column(name, DATATYPE));
+        table.addColumn(new Column((name + ID_EXTENSION), DATATYPE));
       }
       tables.add(table);
     }
 
+    // Process array nodes
     for (int i = 0; i < jArray.length(); i++) {
 
       // Nodes in array are objects
       if (child0 instanceof JSONObject) {
         JSONObject jsonobj = (JSONObject) jArray.get(i);
-        if (parent != null) {
+        if (parentName != null) {
+          // Generate an ID for the array elemnt and add the id to the element
           String newId = getId();
           jsonobj.put(name + ID_EXTENSION, newId);
 
-          Table aTOb = getTable(parent + "_" + name).get();
+          Table aTOb = getTable(parentName + "_" + name).get();
           Record r = new Record(aTOb);
           addDataToRecords(r, aTOb.getName(), name + ID_EXTENSION, newId);
-          addDataToRecords(r, aTOb.getName(), parent + ID_EXTENSION, id);
+          addDataToRecords(r, aTOb.getName(), parentName + ID_EXTENSION, parentId);
         }
 
         handleJsonObject(name, jsonobj);
 
+        // Nodes are values
       } else {
         Record r = new Record(getTable(name).get());
         String newId = getId();
         addDataToRecords(r, name, name, jArray.get(i).toString());
 
-        if (parent != null) {
+        if (parentName != null) {
           addDataToRecords(r, name, name + ID_EXTENSION, newId);
 
-          Table aTOb = getTable(parent + "_" + name).get();
+          Table aTOb = getTable(parentName + "_" + name).get();
           r = new Record(aTOb);
           addDataToRecords(r, aTOb.getName(), name + ID_EXTENSION, newId);
-          addDataToRecords(r, aTOb.getName(), parent + ID_EXTENSION, id);
+          addDataToRecords(r, aTOb.getName(), parentName + ID_EXTENSION, parentId);
         }
 
       }
@@ -137,21 +134,21 @@ public class JusonConverter {
     tables.add(AtoB);
   }
 
-  private void handleJsonObject(String name, JSONObject jObject)
+  private void handleJsonObject(String jsonName, JSONObject jObject)
       throws JSONException, JusonException {
 
     // Create table
-    if (getTable(name).isEmpty()) {
+    if (getTable(jsonName).isEmpty()) {
       JSONArray arr = jObject.names();
-      Table table = new Table(name.toLowerCase(), "json");
+      Table table = new Table(jsonName.toLowerCase(), "json");
       for (int j = 0; j < arr.length(); j++) {
         Object o = jObject.get(arr.getString(j));
         if (o instanceof JSONObject) {
-          table.addColumn(new Column((arr.getString(j) + ID_EXTENSION).toLowerCase(), DATATYPE));
+          table.addColumn(new Column((arr.getString(j) + ID_EXTENSION), DATATYPE));
         } else if (o instanceof JSONArray) {
-          table.addColumn(new Column((name + ID_EXTENSION).toLowerCase(), DATATYPE));
+          table.addColumn(new Column((jsonName + ID_EXTENSION), DATATYPE));
         } else {
-          table.addColumn(new Column(arr.getString(j).toLowerCase(), DATATYPE));
+          table.addColumn(new Column(arr.getString(j), DATATYPE));
         }
       }
       tables.add(table);
@@ -159,26 +156,31 @@ public class JusonConverter {
 
     // Rpocess child nodes
     Iterator<String> iterator = jObject.keys();
-    Record r = new Record(getTable(name).get());
+    Record r = new Record(getTable(jsonName).get());
     while (iterator.hasNext()) {
       String currentKey = iterator.next();
       Object obj = jObject.get(currentKey);
 
       if (obj instanceof JSONArray) {
-        String id = getId();
-        addDataToRecords(r, name, name + ID_EXTENSION, id);
-        handleJsonArray(currentKey, (JSONArray) obj, name, id);
+        // Child node is Array
+        // Generating an ID for the parent node and adding it to the record
+        // Don't generate new ID when there is a ID already
+
+        String id = jObject.has(jsonName + ID_EXTENSION) ?
+            jObject.getString(jsonName + ID_EXTENSION) : getId();
+        addDataToRecords(r, jsonName, jsonName + ID_EXTENSION, id);
+        handleJsonArray(currentKey, (JSONArray) obj, jsonName, id);
 
       } else if (obj instanceof JSONObject) {
         JSONObject jsonObject = (JSONObject) obj;
-        String id = getId();
+        String id = r.getData(currentKey + ID_EXTENSION).orElseGet(this::getId);
         jsonObject.put(currentKey + ID_EXTENSION, id);
         handleJsonObject(currentKey, jsonObject);
-        addDataToRecords(r, name, currentKey + ID_EXTENSION, id);
+        addDataToRecords(r, jsonName, currentKey + ID_EXTENSION, id);
 
       } else {
         // Add Data to record
-        addDataToRecords(r, name, currentKey, obj.toString());
+        addDataToRecords(r, jsonName, currentKey, obj.toString());
       }
     }
   }

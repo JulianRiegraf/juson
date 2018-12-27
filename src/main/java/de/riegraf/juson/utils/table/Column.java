@@ -18,8 +18,8 @@ public class Column {
   }
 
   public Column(String name, String datatype) {
-    this.name = name;
-    this.datatype = datatype;
+    this.name = name.toLowerCase();
+    this.datatype = datatype.toUpperCase();
     this.precision = null;
     this.defaultValue = null;
   }
