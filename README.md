@@ -1,11 +1,18 @@
 # JUSON
-A simple JSON to PostgreSQL mapper.
+A simple JSON to relational database mapper.
 
 Status: **`DEVELOPMENT`**
 
 [![Build Status](https://travis-ci.com/JulianRiegraf/juson.svg?branch=master)](https://travis-ci.com/JulianRiegraf/juson)
-## Simple JSON object mapping
 
+### Supported databases:
+* PostgreSQL
+
+### Usage
+todo
+
+### Examples
+#### Simple JSON object mapping
 *number.json*
 ```JSON
 {
@@ -21,7 +28,7 @@ Status: **`DEVELOPMENT`**
 | ------ | ------- | ----- |
 | double | true    | 1.2   |
 
-## Simple JSON array mapping
+#### Simple JSON array mapping
 
 *numbers.json*
 ```JSON
@@ -52,7 +59,7 @@ Status: **`DEVELOPMENT`**
 | int    | true    | 2     |
 | double | false   | -1.2  |
 
-## Nested object mapping
+#### Nested object mapping
 
 *api_call.json*
 ```JSON
@@ -78,7 +85,7 @@ Status: **`DEVELOPMENT`**
 | --------- | ------ | ------- | ----- |
 | 1001      | double | true    | 1.2   |
 
-## Nested objects and arrays
+#### Nested objects and arrays
 
 *articles_call.json*
 ```JSON
