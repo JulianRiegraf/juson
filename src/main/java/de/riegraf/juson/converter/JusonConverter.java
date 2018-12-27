@@ -53,10 +53,7 @@ public class JusonConverter {
     if (getTable(name).isEmpty()) {
       Table table = new Table(name.toLowerCase(), "json");
       if (parent != null) {
-        Table AtoB = new Table(parent + "_" + name, "json");
-        AtoB.addColumn(new Column(parent + ID_EXTENSION, DATATYPE));
-        AtoB.addColumn(new Column(name + ID_EXTENSION, DATATYPE));
-        tables.add(AtoB);
+        createAssignmentTable(name, parent);
       }
 
       // Nodes in array are objects
@@ -133,6 +130,13 @@ public class JusonConverter {
     }
   }
 
+  private void createAssignmentTable(String name, String parent) {
+    Table AtoB = new Table(parent + "_" + name, "json");
+    AtoB.addColumn(new Column(parent + ID_EXTENSION, DATATYPE));
+    AtoB.addColumn(new Column(name + ID_EXTENSION, DATATYPE));
+    tables.add(AtoB);
+  }
+
   private void handleJsonObject(String name, JSONObject jObject)
       throws JSONException, JusonException {
 
@@ -196,7 +200,7 @@ public class JusonConverter {
   }
 
 
-  public class Database {
+  public static class Database {
 
     private List<Table> tables;
     private List<Record> records;
