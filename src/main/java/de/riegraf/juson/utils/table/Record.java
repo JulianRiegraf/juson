@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
- * Represents a record (row) of a database table.
+ * Represents a record (row) of a de.riegraf.juson.database table.
  */
 public class Record {
 

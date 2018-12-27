@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Represents a database table. Does NOT hold any data.
+ * Represents a de.riegraf.juson.database table. Does NOT hold any data.
  */
 public class Table {
 
@@ -69,7 +69,7 @@ public class Table {
 
 
   /**
-   * Builds a SQL statement to insert the table data into the database.
+   * Builds a SQL statement to insert the table data into the de.riegraf.juson.database.
    *
    * @return List of statements
    */

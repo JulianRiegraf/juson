@@ -4,7 +4,6 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import de.riegraf.juson.Main;
 import de.riegraf.juson.converter.JusonConverter.Database;
 import de.riegraf.juson.exception.JusonException;
 import de.riegraf.juson.utils.table.Column;
@@ -17,9 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class JusonConverterTest {
@@ -44,7 +40,7 @@ public class JusonConverterTest {
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
-    Main.printTablesAndRecords(tables, records);
+    Juson.printTablesAndRecords(tables, records);
 
     assertEquals(1, tables.size());
     assertEquals(1, records.size());
@@ -71,7 +67,7 @@ public class JusonConverterTest {
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
-    Main.printTablesAndRecords(tables, records);
+    Juson.printTablesAndRecords(tables, records);
 
     assertEquals(1, tables.size());
     assertEquals(3, records.size());
@@ -108,7 +104,7 @@ public class JusonConverterTest {
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
-    Main.printTablesAndRecords(tables, records);
+    Juson.printTablesAndRecords(tables, records);
 
     assertEquals(2, tables.size());
     assertEquals(2, records.size());
@@ -161,7 +157,7 @@ public class JusonConverterTest {
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
-    Main.printTablesAndRecords(tables, records);
+    Juson.printTablesAndRecords(tables, records);
 
     assertEquals(13, records.size());
 
@@ -281,7 +277,7 @@ public class JusonConverterTest {
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
-    Main.printTablesAndRecords(tables, records);
+    Juson.printTablesAndRecords(tables, records);
 
     assertEquals(5, tables.size());
 

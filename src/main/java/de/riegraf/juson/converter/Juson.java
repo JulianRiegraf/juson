@@ -1,7 +1,6 @@
-package de.riegraf.juson;
+package de.riegraf.juson.converter;
 
-import database.PostgreSQL;
-import de.riegraf.juson.converter.JusonConverter;
+import de.riegraf.juson.database.PostgreSQL;
 import de.riegraf.juson.exception.JusonException;
 import de.riegraf.juson.utils.table.Record;
 import de.riegraf.juson.utils.table.Table;
@@ -12,43 +11,29 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 
-public class Main {
+public class Juson {
 
-  public static void main(final String[] args)
-      throws JSONException, JusonException, SQLException, ClassNotFoundException, IOException {
+  public Juson(String rootName, String json, PostgreSQL postgre) throws JusonException, SQLException, ClassNotFoundException {
 
-    //final String json = new JiraCaller().call().get();
-
-    String filename = "articles_call.json";
-    String path = "/home/julian/IdeaProjects/juson/src/test/resources/" + filename;
-    String json = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
-
-
-    JusonConverter a = new JusonConverter();
-    JusonConverter.Database db = a.convert(filename, json);
+    JusonConverter jusonConverter = new JusonConverter();
+    JusonConverter.Database db = jusonConverter.convert(rootName, json);
 
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
     printTablesAndRecords(tables, records);
 
-    PostgreSQL postgreSQL = new PostgreSQL("localhost:5432", "postgres", "docker");
-    postgreSQL.executeSQL("DROP SCHEMA IF EXISTS json CASCADE");
-    postgreSQL.executeSQL("CREATE SCHEMA json");
-
     tables.forEach(x -> {
       try {
-        postgreSQL.executeSQL(x.getCreateTableQuery());
+        postgre.executeSQL(x.getCreateTableQuery());
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -56,7 +41,7 @@ public class Main {
 
     tables.forEach(table -> {
       try {
-        PreparedStatement p = postgreSQL
+        PreparedStatement p = postgre
             .createPreparedStatement(table.getInsertSqlForPrepStatement());
 
         List<Record> recordOfTable = records.stream()
@@ -110,11 +95,34 @@ public class Main {
   }
 
   public static String jsonFromFile(String resourceName) {
-    InputStream is = Main.class.getResourceAsStream(resourceName);
+    InputStream is = Juson.class.getResourceAsStream(resourceName);
     if (is == null) {
       throw new NullPointerException("Cannot find resource file " + resourceName);
     }
     return new JSONObject(new JSONTokener(is)).toString();
+  }
+
+  public static void main(final String[] args){
+    String filename = "world.json";
+    String path = "/home/julian/IdeaProjects/juson/src/test/resources/" + filename;
+
+    try {
+      String json = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
+      PostgreSQL postgreSQL = new PostgreSQL("localhost:5432", "postgres", "docker");
+      postgreSQL.executeSQL("DROP SCHEMA IF EXISTS json CASCADE");
+      postgreSQL.executeSQL("CREATE SCHEMA json");
+      new Juson("world", json, postgreSQL);
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (JusonException e) {
+      e.printStackTrace();
+    }
+
   }
 
 }

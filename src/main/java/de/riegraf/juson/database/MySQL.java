@@ -1,28 +1,34 @@
-package database;
+package de.riegraf.juson.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * A wrapper for the PostgreSQL connection.
+ * A wrapper for the MySQL connection.
  */
-public class PostgreSQL {
+public class MySQL {
 
   private Connection connection;
 
-  public PostgreSQL(String url, String user, String password)
-      throws SQLException, ClassNotFoundException {
-    connection = DriverManager.getConnection("jdbc:postgresql://" + url + "/", user, password);
+  public MySQL(String url, String user, String password, List<String> parameters)
+      throws SQLException {
+    List<String> params = parameters != null ? parameters : Collections.emptyList();
+    connection = DriverManager.getConnection(
+        "jdbc:mysql://" + url + "?" + params.stream().collect(Collectors.joining("&")), user,
+        password);
   }
 
-  public PostgreSQL() {
+  public MySQL() {
   }
 
   /**
-   * Executes an SQL statement on the database. Use this if you are not interested in a ResultSet.
+   * Executes an SQL statement on the de.riegraf.juson.database. Use this if you are not interested in a ResultSet.
    *
    * @param sql the sql statement
    * @return true if the result is a ResultSet object
@@ -35,7 +41,7 @@ public class PostgreSQL {
    * Executes a sql statement.
    *
    * @param sql the sql statement
-   * @return the response from the database in a ResultSet
+   * @return the response from the de.riegraf.juson.database in a ResultSet
    */
   public ResultSet querySQL(String sql) throws SQLException {
     return connection.createStatement().executeQuery(sql);
@@ -52,7 +58,7 @@ public class PostgreSQL {
   }
 
   /**
-   * Closes the database connection.
+   * Closes the de.riegraf.juson.database connection.
    */
   public void close() throws SQLException {
     connection.close();
