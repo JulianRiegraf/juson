@@ -1,27 +1,20 @@
 package de.riegraf.juson.converter;
 
-import de.riegraf.juson.database.PostgreSQL;
+import de.riegraf.juson.database.DatabaseConnection;
 import de.riegraf.juson.exception.JusonException;
 import de.riegraf.juson.utils.table.Record;
 import de.riegraf.juson.utils.table.Table;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 
-public class Juson {
+public class JusonDatabaseWriter {
 
-  public Juson(String rootName, String json, PostgreSQL postgre, String schema) throws JusonException, SQLException, ClassNotFoundException {
+  public JusonDatabaseWriter(String rootName, String json, DatabaseConnection dbConnection, String schema) throws JusonException {
 
     JusonConverter jusonConverter = new JusonConverter(schema);
     JusonConverter.Database db = jusonConverter.convert(rootName, json);
@@ -29,11 +22,9 @@ public class Juson {
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
-    printTablesAndRecords(tables, records);
-
     tables.forEach(x -> {
       try {
-        postgre.executeSQL(x.getCreateTableQuery());
+        dbConnection.executeSQL(x.getCreateTableQuery());
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -41,7 +32,7 @@ public class Juson {
 
     tables.forEach(table -> {
       try {
-        PreparedStatement p = postgre
+        PreparedStatement p = dbConnection
             .createPreparedStatement(table.getInsertSqlForPrepStatement());
 
         List<Record> recordOfTable = records.stream()
@@ -79,8 +70,7 @@ public class Juson {
     Map<Table, List<Record>> collect = records.stream()
         .collect(Collectors.groupingBy(Record::getTable));
 
-    collect.entrySet().stream().map(entry -> recordsToString(entry)).forEach(System.out::println);
-
+    collect.entrySet().stream().map(JusonDatabaseWriter::recordsToString).forEach(System.out::println);
   }
 
 
@@ -92,30 +82,6 @@ public class Juson {
             .mapToObj(index -> r.getData(index).orElse("null"))
             .collect(Collectors.joining(", "))
             + ")").collect(Collectors.joining("\n"));
-  }
-
-  public static void main(final String[] args){
-    final String filename = "world.json";
-    final String path = "/home/julian/IdeaProjects/juson/src/test/resources/" + filename;
-    final String schema = "fromJson";
-
-    try {
-      final String json = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
-      PostgreSQL postgreSQL = new PostgreSQL("localhost:5432", "postgres", "docker");
-      postgreSQL.executeSQL("DROP SCHEMA IF EXISTS " + schema + " CASCADE");
-      postgreSQL.executeSQL("CREATE SCHEMA " + schema);
-      new Juson(filename, json, postgreSQL, schema);
-
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (JusonException e) {
-      e.printStackTrace();
-    }
-
   }
 
 }

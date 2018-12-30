@@ -40,7 +40,7 @@ public class JusonConverterTest {
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
-    Juson.printTablesAndRecords(tables, records);
+    JusonDatabaseWriter.printTablesAndRecords(tables, records);
 
     assertEquals(1, tables.size());
     assertEquals(1, records.size());
@@ -67,7 +67,7 @@ public class JusonConverterTest {
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
-    Juson.printTablesAndRecords(tables, records);
+    JusonDatabaseWriter.printTablesAndRecords(tables, records);
 
     assertEquals(1, tables.size());
     assertEquals(3, records.size());
@@ -104,7 +104,7 @@ public class JusonConverterTest {
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
-    Juson.printTablesAndRecords(tables, records);
+    JusonDatabaseWriter.printTablesAndRecords(tables, records);
 
     assertEquals(2, tables.size());
     assertEquals(2, records.size());
@@ -157,7 +157,7 @@ public class JusonConverterTest {
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
-    Juson.printTablesAndRecords(tables, records);
+    JusonDatabaseWriter.printTablesAndRecords(tables, records);
 
     assertEquals(13, records.size());
 
@@ -277,7 +277,7 @@ public class JusonConverterTest {
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
-    Juson.printTablesAndRecords(tables, records);
+    JusonDatabaseWriter.printTablesAndRecords(tables, records);
 
     assertEquals(5, tables.size());
 
