@@ -9,7 +9,7 @@ import java.sql.SQLException;
 /**
  * A wrapper for the PostgreSQL connection.
  */
-public class PostgreSQL {
+public class PostgreSQL implements DatabaseConnection{
 
   private Connection connection;
 

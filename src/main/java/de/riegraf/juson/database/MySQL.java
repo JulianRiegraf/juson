@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * A wrapper for the MySQL connection.
  */
-public class MySQL {
+public class MySQL implements DatabaseConnection {
 
   private Connection connection;
 
@@ -28,11 +28,13 @@ public class MySQL {
   }
 
   /**
-   * Executes an SQL statement on the de.riegraf.juson.database. Use this if you are not interested in a ResultSet.
+   * Executes an SQL statement on the de.riegraf.juson.database. Use this if you are not interested
+   * in a ResultSet.
    *
    * @param sql the sql statement
    * @return true if the result is a ResultSet object
    */
+  @Override
   public boolean executeSQL(String sql) throws SQLException {
     return connection.createStatement().execute(sql);
   }
@@ -43,6 +45,7 @@ public class MySQL {
    * @param sql the sql statement
    * @return the response from the de.riegraf.juson.database in a ResultSet
    */
+  @Override
   public ResultSet querySQL(String sql) throws SQLException {
     return connection.createStatement().executeQuery(sql);
   }
@@ -53,6 +56,7 @@ public class MySQL {
    * @param sql the sql statement that contain one or more '?' placeholder
    * @return the precompiled PreparedStatement
    */
+  @Override
   public PreparedStatement createPreparedStatement(String sql) throws SQLException {
     return connection.prepareStatement(sql);
   }
@@ -60,6 +64,7 @@ public class MySQL {
   /**
    * Closes the de.riegraf.juson.database connection.
    */
+  @Override
   public void close() throws SQLException {
     connection.close();
   }
