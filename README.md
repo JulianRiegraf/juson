@@ -7,6 +7,7 @@ Status: **`DEVELOPMENT`**
 
 ### Supported databases:
 * PostgreSQL
+* MySQL/ MariaDB
 
 ### Usage
 ```Java
