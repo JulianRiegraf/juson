@@ -7,9 +7,11 @@
   * [ ] Make bulk size variable
   * [ ] Make console app
   * [ ] Offer incremental runs
-  * [ ] Abstract the database connection to easily implement custom connections
+  * [x] Abstract the database connection to easily implement custom connections
   * [ ] Provide a docker image
   * [ ] Provide a jar file
 * [ ] Version 1.1
   * [ ] Call a REST API and save the JSON response in a database
   * [ ] Insert the data by streaming the JSON file
+* [ ] Version 1.x
+  * [ ] Implement database to JSON mapper
