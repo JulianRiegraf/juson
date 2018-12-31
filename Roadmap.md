@@ -9,6 +9,7 @@
   * [ ] Offer incremental runs
   * [ ] Abstract the database connection to easily implement custom connections
   * [ ] Provide a docker image
+  * [ ] Provide a jar file
 * [ ] Version 1.1
   * [ ] Call a REST API and save the JSON response in a database
   * [ ] Insert the data by streaming the JSON file
