@@ -74,7 +74,7 @@ public class JusonConverterTest {
 
     assertEquals("numbers", tables.get(0).getName());
 
-    assertTrue(tables.get(0).getColumns().containsAll(Arrays.asList(
+    assertTrue(tables.get(0).getColumnsAsList().containsAll(Arrays.asList(
         new Column("type", ""),
         new Column("positiv", ""),
         new Column("value", "")))
@@ -115,12 +115,12 @@ public class JusonConverterTest {
     assertNotEquals(-1, index_api_call);
     assertNotEquals(-1, index_result);
 
-    assertTrue(tables.get(index_api_call).getColumns().containsAll(Arrays.asList(
+    assertTrue(tables.get(index_api_call).getColumnsAsList().containsAll(Arrays.asList(
         new Column("result_id", ""),
         new Column("status", "")))
     );
 
-    assertTrue(tables.get(index_result).getColumns().containsAll(Arrays.asList(
+    assertTrue(tables.get(index_result).getColumnsAsList().containsAll(Arrays.asList(
         new Column("result_id", ""),
         new Column("type", ""),
         new Column("positiv", ""),
@@ -293,20 +293,20 @@ public class JusonConverterTest {
     assertNotEquals(-1, index_articles_call_results);
     assertNotEquals(-1, index_results_multimedia);
 
-    assertEquals(4, tables.get(index_articles_call).getColumns().size());
-    assertEquals(5, tables.get(index_results).getColumns().size());
-    assertEquals(5, tables.get(index_multimedia).getColumns().size());
-    assertEquals(2, tables.get(index_articles_call_results).getColumns().size());
-    assertEquals(2, tables.get(index_results_multimedia).getColumns().size());
+    assertEquals(4, tables.get(index_articles_call).getColumnsAsList().size());
+    assertEquals(5, tables.get(index_results).getColumnsAsList().size());
+    assertEquals(5, tables.get(index_multimedia).getColumnsAsList().size());
+    assertEquals(2, tables.get(index_articles_call_results).getColumnsAsList().size());
+    assertEquals(2, tables.get(index_results_multimedia).getColumnsAsList().size());
 
-    assertTrue(tables.get(index_articles_call).getColumns().containsAll(Arrays.asList(
+    assertTrue(tables.get(index_articles_call).getColumnsAsList().containsAll(Arrays.asList(
         new Column("articles_call_id", ""),
         new Column("status", ""),
         new Column("last_updated", ""),
         new Column("num_results", "")))
     );
 
-    assertTrue(tables.get(index_results).getColumns().containsAll(Arrays.asList(
+    assertTrue(tables.get(index_results).getColumnsAsList().containsAll(Arrays.asList(
         new Column("results_id", ""),
         new Column("section", ""),
         new Column("title", ""),
@@ -314,7 +314,7 @@ public class JusonConverterTest {
         new Column("published_date", "")))
     );
 
-    assertTrue(tables.get(index_multimedia).getColumns().containsAll(Arrays.asList(
+    assertTrue(tables.get(index_multimedia).getColumnsAsList().containsAll(Arrays.asList(
         new Column("multimedia_id", ""),
         new Column("format", ""),
         new Column("height", ""),
@@ -323,12 +323,12 @@ public class JusonConverterTest {
         //new Column("file", "")))
     );
 
-    assertTrue(tables.get(index_articles_call_results).getColumns().containsAll(Arrays.asList(
+    assertTrue(tables.get(index_articles_call_results).getColumnsAsList().containsAll(Arrays.asList(
         new Column("articles_call_id", ""),
         new Column("results_id", "")))
     );
 
-    assertTrue(tables.get(index_results_multimedia).getColumns().containsAll(Arrays.asList(
+    assertTrue(tables.get(index_results_multimedia).getColumnsAsList().containsAll(Arrays.asList(
         new Column("results_id", ""),
         new Column("multimedia_id", "")))
     );

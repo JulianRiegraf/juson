@@ -1,6 +1,7 @@
 package de.riegraf.juson.converter;
 
 import de.riegraf.juson.database.DatabaseConnection;
+import de.riegraf.juson.database.PostgreSQL;
 import de.riegraf.juson.exception.JusonException;
 import de.riegraf.juson.utils.table.Record;
 import de.riegraf.juson.utils.table.Table;
@@ -24,7 +25,7 @@ public class JusonDatabaseWriter {
 
     tables.forEach(x -> {
       try {
-        dbConnection.executeSQL(x.getCreateTableQuery());
+        dbConnection.executeSQL(dbConnection.getCreateTableQuery(x));
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -33,7 +34,7 @@ public class JusonDatabaseWriter {
     tables.forEach(table -> {
       try {
         PreparedStatement p = dbConnection
-            .createPreparedStatement(table.getInsertSqlForPrepStatement());
+            .createPreparedStatement(dbConnection.getInsertSqlForPrepStatement(table));
 
         List<Record> recordOfTable = records.stream()
             .filter(r -> r.getTable().equals(table))
@@ -49,7 +50,7 @@ public class JusonDatabaseWriter {
   private static void insertRecords(List<Record> records, PreparedStatement p) {
     try {
       for (Record r : records) {
-        for (int i = 0; i < r.getTable().getColumns().size(); i++) {
+        for (int i = 0; i < r.getTable().getColumnsAsList().size(); i++) {
           p.setString(i + 1, r.getData(i).orElse(null));
         }
         p.addBatch();
@@ -63,7 +64,7 @@ public class JusonDatabaseWriter {
   public static void printTablesAndRecords(List<Table> tables, List<Record> records) {
     System.out.println(
         "--- Tables ---\n" + tables.stream()
-            .map(Table::getCreateTableQuery)
+            .map(new PostgreSQL()::getCreateTableQuery)
             .collect(Collectors.joining("\n"))
     );
 
@@ -75,7 +76,7 @@ public class JusonDatabaseWriter {
 
 
   public static String recordsToString(Map.Entry<Table, List<Record>> entry) {
-    int columnCount = entry.getKey().getColumns().size();
+    int columnCount = entry.getKey().getColumnsAsList().size();
     return entry.getValue().stream().map(r ->
         "INSERT INTO " + r.getTable().getName() + " VALUES ("
             + IntStream.range(0, columnCount)

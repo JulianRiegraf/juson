@@ -17,7 +17,7 @@ public class Record {
 
   public Record(Table table) {
     this.table = table;
-    data = new HashMap<>(table.getColumns().size());
+    data = new HashMap<>(table.getColumnsAsList().size());
   }
 
   public Table getTable() {
@@ -30,25 +30,25 @@ public class Record {
   }
 
   public Record addData(String columnName, String data) {
-    Optional<Column> column = this.table.getColumns().stream()
+    Optional<Column> column = this.table.getColumnsAsList().stream()
         .filter(x -> x.name.equalsIgnoreCase(columnName)).findFirst();
     if (column.isEmpty()) {
       throw new NoSuchElementException(
           "There is no column '" + columnName + "' in table  '" + table.getName() + "'");
     }
-    int index = table.getColumns().indexOf(column.get());
+    int index = table.getColumnsAsList().indexOf(column.get());
     this.data.put(index, data);
     return this;
   }
 
   public Optional<String> getData(String columnName) {
-    Optional<Column> column = this.table.getColumns().stream()
+    Optional<Column> column = this.table.getColumnsAsList().stream()
         .filter(x -> x.name.equalsIgnoreCase(columnName)).findFirst();
     if (column.isEmpty()) {
       throw new NoSuchElementException(
           "There is no column '" + columnName + "' in table  '" + table.getName() + "'");
     }
-    int index = table.getColumns().indexOf(column.get());
+    int index = table.getColumnsAsList().indexOf(column.get());
     return Optional.ofNullable(data.get(index));
   }
 

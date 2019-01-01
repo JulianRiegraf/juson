@@ -1,5 +1,8 @@
-package de.riegraf.juson.converter;
+package de.riegraf.juson;
 
+import de.riegraf.juson.converter.JusonDatabaseWriter;
+import de.riegraf.juson.database.DatabaseConnection;
+import de.riegraf.juson.database.MySQL;
 import de.riegraf.juson.database.PostgreSQL;
 import de.riegraf.juson.exception.JusonException;
 import java.io.IOException;
@@ -7,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class Main {
 
@@ -17,14 +21,13 @@ public class Main {
 
     try {
       final String json = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
-      PostgreSQL postgreSQL = new PostgreSQL("localhost:5432", "postgres", "docker");
-      postgreSQL.executeSQL("DROP SCHEMA IF EXISTS " + schema + " CASCADE");
-      postgreSQL.executeSQL("CREATE SCHEMA " + schema);
-      new JusonDatabaseWriter(filename, json, postgreSQL, schema);
+      //DatabaseConnection conn = new PostgreSQL("localhost:5432", "postgres", "docker");
+      DatabaseConnection conn = new MySQL("localhost:3306", "root", "docker", Arrays.asList("useSSL=false"));
+      conn.executeSQL("DROP SCHEMA IF EXISTS " + schema + "");
+      conn.executeSQL("CREATE SCHEMA " + schema);
+      new JusonDatabaseWriter(filename, json, conn, schema);
 
     } catch (SQLException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();

@@ -30,7 +30,11 @@ public class Table {
     return super.equals(obj);
   }
 
-  public List<Column> getColumns() {
+  public Map<Integer, Column> getColumns() {
+    return columns;
+  }
+
+  public List<Column> getColumnsAsList() {
     return new ArrayList<>(columns.values());
   }
 
@@ -66,43 +70,6 @@ public class Table {
   public void removeColumn(String name) {
     columns.remove(getColumn(name));
   }
-
-
-  /**
-   * Builds a SQL statement to insert the table data into the de.riegraf.juson.database.
-   *
-   * @return List of statements
-   */
-  public String getInsertSqlForPrepStatement() {
-    return "INSERT INTO " + schema + "." + name + " (" + columns.entrySet().stream()
-        .map(Entry::getValue)
-        .filter(x -> x.defaultValue == null).map(e -> e.name)
-        .collect(Collectors.joining(", "))
-        + ") VALUES (" + columns.entrySet().stream().map(Entry::getValue)
-        .filter(x -> x.defaultValue == null).map(e -> "?")
-        .collect(Collectors.joining(", ")) + ")";
-  }
-
-
-  /**
-   * Builds a SQL statement to create the table.
-   *
-   * @return The statement
-   */
-  public String getCreateTableQuery() {
-    StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ").append(schema)
-        .append(".").append(name).append(" (");
-
-    if (columns.isEmpty()) {
-      return sb.append(")").toString();
-    }
-
-    return columns.entrySet().stream()
-        .map(Entry::getValue)
-        .map(e -> e.toString())
-        .collect(Collectors.joining(", ", sb.toString(), ")"));
-  }
-
 
   @Override
   public String toString() {
