@@ -6,7 +6,7 @@
   * [ ] Separate structure und data
   * [ ] Make bulk size variable
   * [ ] Make console app
-  * [ ] Offer incremental runs
+  * [ ] Build primary and foreign keys in database
   * [x] Abstract the database connection to easily implement custom connections
   * [ ] Provide a docker image
   * [ ] Provide a jar file
