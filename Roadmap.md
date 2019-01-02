@@ -2,7 +2,7 @@
 
 * [ ] Finish version 1.0
   * [x] Complete first running version
-  * [ ] Fill objects with missing values with null
+  * [x] Fill objects with missing values with null
   * [ ] Separate structure und data
   * [ ] Make bulk size variable
   * [ ] Make console app

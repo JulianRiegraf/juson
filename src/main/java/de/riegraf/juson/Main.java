@@ -22,7 +22,7 @@ public class Main {
     try {
       final String json = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
       //DatabaseConnection conn = new PostgreSQL("localhost:5432", "postgres", "docker");
-      DatabaseConnection conn = new MySQL("localhost:3306", "root", "docker", Arrays.asList("useSSL=false"));
+      DatabaseConnection conn = new MySQL("localhost:3306", "root", "docker", Arrays.asList("useSSL=false", "allowPublicKeyRetrieval=true"));
       conn.executeSQL("DROP SCHEMA IF EXISTS " + schema + "");
       conn.executeSQL("CREATE SCHEMA " + schema);
       new JusonDatabaseWriter(filename, json, conn, schema);

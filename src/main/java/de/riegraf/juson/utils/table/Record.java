@@ -30,11 +30,11 @@ public class Record {
   }
 
   public Record addData(String columnName, String data) {
-    Optional<Column> column = this.table.getColumnsAsList().stream()
-        .filter(x -> x.name.equalsIgnoreCase(columnName)).findFirst();
+    Optional<Column> column = this.table.getColumn(columnName);
+
     if (column.isEmpty()) {
       throw new NoSuchElementException(
-          "There is no column '" + columnName + "' in table  '" + table.getName() + "'");
+          "There is no column '" + columnName + "' in table '" + table.getName() + "'");
     }
     int index = table.getColumnsAsList().indexOf(column.get());
     this.data.put(index, data);

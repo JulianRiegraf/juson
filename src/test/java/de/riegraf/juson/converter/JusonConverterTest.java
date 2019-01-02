@@ -355,9 +355,37 @@ public class JusonConverterTest {
         + "}";
 
     JusonConverter a = new JusonConverter("json");
-    Database db = a.convert("root", json);
+    a.convert("root", json);
+  }
+
+  @Test
+  public void putNullInMissingValuesTest() throws IOException, JusonException {
+    final String filename = "persons.json";
+    final String json = jsonFromFile(filename);
+
+    JusonConverter a = new JusonConverter("json");
+    Database db = a.convert(filename, json);
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
+
+    JusonDatabaseWriter.printTablesAndRecords(tables, records);
+
+    assertEquals(1, tables.size());
+    assertEquals(3, records.size());
+
+    List<String> columns = tables.get(0).getColumnsAsList().stream()
+        .map(x -> x.name)
+        .collect(Collectors.toList());
+
+    assertEquals(7, columns.size());
+    assertTrue(columns.contains("name"));
+    assertTrue(columns.contains("surname"));
+    assertTrue(columns.contains("gender"));
+    assertTrue(columns.contains("region"));
+    assertTrue(columns.contains("age"));
+    assertTrue(columns.contains("title"));
+    assertTrue(columns.contains("email"));
+
   }
 }
 

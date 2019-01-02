@@ -192,6 +192,11 @@ public class JusonConverter {
 
   private void addDataToRecords(Record record, String tableName, String columnName, String data) {
     Record r = (record == null) ? new Record(getTable(tableName).get()) : record;
+
+    if (r.getTable().getColumn(columnName).isEmpty()) {
+      r.getTable().addColumn(columnName, DATATYPE, null, null);
+    }
+
     r.addData(columnName, data);
     if (!records.contains(r)) {
       records.add(r);
