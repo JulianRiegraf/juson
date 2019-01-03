@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Hari",
+    "surname": "Bhuju",
+    "title": "mr",
+    "email": "hari_bhuju@example.com",
+  },
+  {
+    "name": "조",
+    "surname": "혜진",
+    "gender": "female",
+    "region": "Korea",
+    "age": 25,
+    "title": "ms",
+  },
+  {
+    "name": "Adelin",
+    "surname": "Dinulescu",
+    "region": "Romania",
+    "title": "mr",
+    "email": "adelin_84@example.com",
+  }
+]
