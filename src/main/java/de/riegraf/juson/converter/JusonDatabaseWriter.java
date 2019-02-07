@@ -2,9 +2,9 @@ package de.riegraf.juson.converter;
 
 import de.riegraf.juson.database.DatabaseConnection;
 import de.riegraf.juson.database.PostgreSQL;
-import de.riegraf.juson.exception.JusonException;
-import de.riegraf.juson.utils.table.Record;
-import de.riegraf.juson.utils.table.Table;
+import de.riegraf.juson.utils.database.Database;
+import de.riegraf.juson.utils.database.Record;
+import de.riegraf.juson.utils.database.Table;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -15,10 +15,15 @@ import java.util.stream.IntStream;
 
 public class JusonDatabaseWriter {
 
-  public JusonDatabaseWriter(String rootName, String json, DatabaseConnection dbConnection, String schema) throws JusonException {
+  private JusonDatabaseWriter() {
+    throw new IllegalStateException("Utility class");
+  }
 
-    JusonConverter jusonConverter = new JusonConverter(schema);
-    JusonConverter.Database db = jusonConverter.convert(rootName, json);
+  public static void runConvertion(String rootName, String json, DatabaseConnection dbConnection,
+      String schema) {
+
+    Converter jusonConverter = new JusonConverter(schema);
+    Database db = jusonConverter.convert(rootName, json);
 
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
@@ -71,7 +76,8 @@ public class JusonDatabaseWriter {
     Map<Table, List<Record>> collect = records.stream()
         .collect(Collectors.groupingBy(Record::getTable));
 
-    collect.entrySet().stream().map(JusonDatabaseWriter::recordsToString).forEach(System.out::println);
+    collect.entrySet().stream().map(JusonDatabaseWriter::recordsToString)
+        .forEach(System.out::println);
   }
 
 
@@ -84,5 +90,4 @@ public class JusonDatabaseWriter {
             .collect(Collectors.joining(", "))
             + ")").collect(Collectors.joining("\n"));
   }
-
 }

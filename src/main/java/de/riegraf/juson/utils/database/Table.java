@@ -1,4 +1,4 @@
-package de.riegraf.juson.utils.table;
+package de.riegraf.juson.utils.database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Represents a de.riegraf.juson.database table. Does NOT hold any data.
+ * Represents a de.riegraf.juson.database database. Does NOT hold any data.
  */
 public class Table {
 
@@ -25,9 +25,14 @@ public class Table {
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Table) {
-      return ((Table) obj).getName().equalsIgnoreCase(this.name) ? true : false;
+      return ((Table) obj).getName().equalsIgnoreCase(this.name);
     }
     return super.equals(obj);
+  }
+
+  @Override
+  public int hashCode() {
+    return name.toLowerCase().hashCode();
   }
 
   public Map<Integer, Column> getColumns() {
@@ -49,7 +54,7 @@ public class Table {
   public Optional<Column> getColumn(String name) {
     return columns.entrySet().stream()
         .map(Entry::getValue)
-        .filter(c -> c.name.equalsIgnoreCase(name))
+        .filter(c -> c.getName().equalsIgnoreCase(name))
         .findFirst();
   }
 
@@ -60,9 +65,9 @@ public class Table {
   }
 
   public void addColumn(Column newColumn) {
-    if (getColumn(newColumn.name).isPresent()) {
+    if (getColumn(newColumn.getName()).isPresent()) {
       throw new IllegalArgumentException(
-          "Column '" + newColumn.name + "' exists already in table '" + this.name + "'");
+          "Column '" + newColumn.getName() + "' exists already in database '" + this.name + "'");
     }
     columns.put(columns.size(), newColumn);
   }
@@ -75,7 +80,7 @@ public class Table {
   public String toString() {
     return name + " (" + columns.entrySet().stream()
         .map(Entry::getValue)
-        .map(c -> c.name)
+        .map(Column::getName)
         .collect(Collectors.joining(", ")) + ")";
   }
 
