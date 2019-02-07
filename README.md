@@ -25,8 +25,6 @@ Status: **`DEVELOPMENT`**
 
     } catch (SQLException e) {
       e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     } catch (JusonException e) {
