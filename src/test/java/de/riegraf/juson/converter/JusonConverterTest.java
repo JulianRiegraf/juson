@@ -51,9 +51,9 @@ public class JusonConverterTest {
 
     assertEquals("number", tables.get(0).getName());
 
-    assertEquals("positiv", tables.get(0).getColumn(0).name);
-    assertEquals("type", tables.get(0).getColumn(1).name);
-    assertEquals("value", tables.get(0).getColumn(2).name);
+    assertEquals("positiv", tables.get(0).getColumn(0).getName());
+    assertEquals("type", tables.get(0).getColumn(1).getName());
+    assertEquals("value", tables.get(0).getColumn(2).getName());
 
     assertEquals("double", records.get(0).getData("type").get());
     assertEquals("true", records.get(0).getData("positiv").get());
@@ -378,7 +378,7 @@ public class JusonConverterTest {
     assertEquals(3, records.size());
 
     List<String> columns = tables.get(0).getColumnsAsList().stream()
-        .map(x -> x.name)
+        .map(x -> x.getName())
         .collect(Collectors.toList());
 
     assertEquals(7, columns.size());

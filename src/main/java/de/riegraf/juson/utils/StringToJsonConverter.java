@@ -5,6 +5,10 @@ import org.json.JSONObject;
 
 public class StringToJsonConverter {
 
+  private StringToJsonConverter() {
+    throw new IllegalStateException("Utility class");
+  }
+
   public static Object toJsonObject(String json) {
     if (json.startsWith("{")) {
       return new JSONObject(json);

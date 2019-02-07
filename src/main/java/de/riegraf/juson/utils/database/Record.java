@@ -30,25 +30,24 @@ public class Record {
   }
 
   public Record addData(String columnName, String data) {
-    Optional<Column> column = this.table.getColumn(columnName);
+    Optional<Column> opetionalColumn = this.table.getColumn(columnName);
 
-    if (column.isEmpty()) {
-      throw new NoSuchElementException(
-          "There is no column '" + columnName + "' in database '" + table.getName() + "'");
-    }
-    int index = table.getColumnsAsList().indexOf(column.get());
+    Column column = opetionalColumn.orElseThrow(() -> new NoSuchElementException(
+        "There is no column '" + columnName + "' in database '" + table.getName() + "'"));
+
+    int index = table.getColumnsAsList().indexOf(column);
     this.data.put(index, data);
     return this;
   }
 
   public Optional<String> getData(String columnName) {
-    Optional<Column> column = this.table.getColumnsAsList().stream()
-        .filter(x -> x.name.equalsIgnoreCase(columnName)).findFirst();
-    if (column.isEmpty()) {
-      throw new NoSuchElementException(
-          "There is no column '" + columnName + "' in database  '" + table.getName() + "'");
-    }
-    int index = table.getColumnsAsList().indexOf(column.get());
+    Optional<Column> opetionalColumn = this.table.getColumnsAsList().stream()
+        .filter(x -> x.getName().equalsIgnoreCase(columnName)).findFirst();
+
+    Column column = opetionalColumn.orElseThrow(() -> new NoSuchElementException(
+        "There is no column '" + columnName + "' in database '" + table.getName() + "'"));
+
+    int index = table.getColumnsAsList().indexOf(column);
     return Optional.ofNullable(data.get(index));
   }
 

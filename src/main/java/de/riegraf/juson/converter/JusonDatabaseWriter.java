@@ -2,7 +2,6 @@ package de.riegraf.juson.converter;
 
 import de.riegraf.juson.database.DatabaseConnection;
 import de.riegraf.juson.database.PostgreSQL;
-import de.riegraf.juson.exception.JusonException;
 import de.riegraf.juson.utils.database.Database;
 import de.riegraf.juson.utils.database.Record;
 import de.riegraf.juson.utils.database.Table;
@@ -10,14 +9,17 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
 public class JusonDatabaseWriter {
 
-  public JusonDatabaseWriter(String rootName, String json, DatabaseConnection dbConnection,
+  private JusonDatabaseWriter() {
+    throw new IllegalStateException("Utility class");
+  }
+
+  public static void runConvertion(String rootName, String json, DatabaseConnection dbConnection,
       String schema) {
 
     Converter jusonConverter = new JusonConverter(schema);
@@ -88,5 +90,4 @@ public class JusonDatabaseWriter {
             .collect(Collectors.joining(", "))
             + ")").collect(Collectors.joining("\n"));
   }
-
 }

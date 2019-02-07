@@ -103,27 +103,27 @@ public class JusonConverter implements Converter {
           String newId = getId();
           jsonobj.put(name + ID_EXTENSION, newId);
 
-          Table aTOb = getTable(parentName + "_" + name).get();
-          Record r = new Record(aTOb);
-          addDataToRecords(r, aTOb.getName(), name + ID_EXTENSION, newId);
-          addDataToRecords(r, aTOb.getName(), parentName + ID_EXTENSION, parentId);
+          Table aToB = getTable(parentName + "_" + name).orElseThrow();
+          Record r = new Record(aToB);
+          addDataToRecords(r, aToB.getName(), name + ID_EXTENSION, newId);
+          addDataToRecords(r, aToB.getName(), parentName + ID_EXTENSION, parentId);
         }
 
         handleJsonObject(name, jsonobj);
 
         // Nodes are values
       } else {
-        Record r = new Record(getTable(name).get());
+        Record r = new Record(getTable(name).orElseThrow());
         String newId = getId();
         addDataToRecords(r, name, name, jArray.get(i).toString());
 
         if (parentName != null) {
           addDataToRecords(r, name, name + ID_EXTENSION, newId);
 
-          Table aTOb = getTable(parentName + "_" + name).get();
-          r = new Record(aTOb);
-          addDataToRecords(r, aTOb.getName(), name + ID_EXTENSION, newId);
-          addDataToRecords(r, aTOb.getName(), parentName + ID_EXTENSION, parentId);
+          Table aToB = getTable(parentName + "_" + name).orElseThrow();
+          r = new Record(aToB);
+          addDataToRecords(r, aToB.getName(), name + ID_EXTENSION, newId);
+          addDataToRecords(r, aToB.getName(), parentName + ID_EXTENSION, parentId);
         }
 
       }
@@ -131,10 +131,10 @@ public class JusonConverter implements Converter {
   }
 
   private void createAssignmentTable(String name, String parent) {
-    Table AtoB = new Table(parent + "_" + name, schema);
-    AtoB.addColumn(new Column(parent + ID_EXTENSION, DATATYPE));
-    AtoB.addColumn(new Column(name + ID_EXTENSION, DATATYPE));
-    tables.add(AtoB);
+    Table atoB = new Table(parent + "_" + name, schema);
+    atoB.addColumn(new Column(parent + ID_EXTENSION, DATATYPE));
+    atoB.addColumn(new Column(name + ID_EXTENSION, DATATYPE));
+    tables.add(atoB);
   }
 
   private void handleJsonObject(String jsonName, JSONObject jObject) {
@@ -158,7 +158,7 @@ public class JusonConverter implements Converter {
 
     // Rpocess child nodes
     Iterator<String> iterator = jObject.keys();
-    Record r = new Record(getTable(jsonName).get());
+    Record r = new Record(getTable(jsonName).orElseThrow());
     while (iterator.hasNext()) {
       String currentKey = iterator.next();
       Object obj = jObject.get(currentKey);
@@ -188,7 +188,7 @@ public class JusonConverter implements Converter {
   }
 
   private void addDataToRecords(Record record, String tableName, String columnName, String data) {
-    Record r = (record == null) ? new Record(getTable(tableName).get()) : record;
+    Record r = (record == null) ? new Record(getTable(tableName).orElseThrow()) : record;
 
     if (r.getTable().getColumn(columnName).isEmpty()) {
       r.getTable().addColumn(columnName, DATATYPE, null, null);
