@@ -1,7 +1,7 @@
-package de.riegraf.juson.utils.table;
+package de.riegraf.juson.utils.database;
 
 /**
- * Represents a column in a de.riegraf.juson.database table. Does NOT hold any data.
+ * Represents a column in a de.riegraf.juson.database database. Does NOT hold any data.
  */
 public class Column {
 

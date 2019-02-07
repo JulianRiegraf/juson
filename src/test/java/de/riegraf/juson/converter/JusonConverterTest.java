@@ -1,14 +1,15 @@
 package de.riegraf.juson.converter;
 
+import static de.riegraf.juson.utils.StringToJsonConverter.*;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import de.riegraf.juson.converter.JusonConverter.Database;
 import de.riegraf.juson.exception.JusonException;
-import de.riegraf.juson.utils.table.Column;
-import de.riegraf.juson.utils.table.Record;
-import de.riegraf.juson.utils.table.Table;
+import de.riegraf.juson.utils.database.Column;
+import de.riegraf.juson.utils.database.Database;
+import de.riegraf.juson.utils.database.Record;
+import de.riegraf.juson.utils.database.Table;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -21,6 +22,9 @@ import org.junit.Test;
 public class JusonConverterTest {
 
   public String jsonFromFile(String resourceName) throws IOException {
+    if (!resourceName.endsWith(".json")) {
+      resourceName = resourceName + ".json";
+    }
     InputStream is = getClass().getClassLoader().getResourceAsStream(resourceName);
     if (is == null) {
       throw new NullPointerException("Cannot find resource file " + resourceName);
@@ -32,11 +36,11 @@ public class JusonConverterTest {
   @Test
   public void simpleJsonObjectMappingTest() throws JusonException, IOException {
 
-    final String filename = "number.json";
+    final String filename = "number";
     final String json = jsonFromFile(filename);
 
     JusonConverter a = new JusonConverter("json");
-    Database db = a.convert(filename, json);
+    Database db = a.convert(filename, toJsonObject(json));
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
@@ -59,11 +63,11 @@ public class JusonConverterTest {
   @Test
   public void simpleJsonArrayMappingTest() throws JusonException, IOException {
 
-    final String filename = "numbers.json";
+    final String filename = "numbers";
     final String json = jsonFromFile(filename);
 
     JusonConverter a = new JusonConverter("json");
-    Database db = a.convert(filename, json);
+    Database db = a.convert(filename, toJsonObject(json));
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
@@ -96,11 +100,11 @@ public class JusonConverterTest {
   @Test
   public void nestedObjectMappingTest() throws JusonException, IOException {
 
-    final String filename = "api_call.json";
+    final String filename = "api_call";
     final String json = jsonFromFile(filename);
 
     JusonConverter a = new JusonConverter("json");
-    Database db = a.convert(filename, json);
+    Database db = a.convert(filename, toJsonObject(json));
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
@@ -149,11 +153,11 @@ public class JusonConverterTest {
   @Test
   public void nestedObjectsAndArraysDataTest() throws JusonException, IOException {
 
-    final String filename = "articles_call.json";
+    final String filename = "articles_call";
     final String json = jsonFromFile(filename);
 
     JusonConverter a = new JusonConverter("json");
-    Database db = a.convert(filename, json);
+    Database db = a.convert(filename, toJsonObject(json));
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
@@ -269,11 +273,11 @@ public class JusonConverterTest {
   @Test
   public void nestedObjectsAndArraysStructureTest() throws JusonException, IOException {
 
-    final String filename = "articles_call.json";
+    final String filename = "articles_call";
     final String json = jsonFromFile(filename);
 
     JusonConverter a = new JusonConverter("json");
-    Database db = a.convert(filename, json);
+    Database db = a.convert(filename, toJsonObject(json));
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 
@@ -336,7 +340,7 @@ public class JusonConverterTest {
 
   }
 
-  @Test(expected = JusonException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void nestedArrayShouldThrowExceptinTest() throws JusonException {
 
     final String json = "{\n"
@@ -360,11 +364,11 @@ public class JusonConverterTest {
 
   @Test
   public void putNullInMissingValuesTest() throws IOException, JusonException {
-    final String filename = "persons.json";
+    final String filename = "persons";
     final String json = jsonFromFile(filename);
 
     JusonConverter a = new JusonConverter("json");
-    Database db = a.convert(filename, json);
+    Database db = a.convert(filename, toJsonObject(json));
     List<Table> tables = db.getTables();
     List<Record> records = db.getRecords();
 

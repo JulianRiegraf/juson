@@ -1,4 +1,4 @@
-package de.riegraf.juson.utils.table;
+package de.riegraf.juson.utils.database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
- * Represents a record (row) of a de.riegraf.juson.database table.
+ * Represents a record (row) of a de.riegraf.juson.database database.
  */
 public class Record {
 
@@ -34,7 +34,7 @@ public class Record {
 
     if (column.isEmpty()) {
       throw new NoSuchElementException(
-          "There is no column '" + columnName + "' in table '" + table.getName() + "'");
+          "There is no column '" + columnName + "' in database '" + table.getName() + "'");
     }
     int index = table.getColumnsAsList().indexOf(column.get());
     this.data.put(index, data);
@@ -46,7 +46,7 @@ public class Record {
         .filter(x -> x.name.equalsIgnoreCase(columnName)).findFirst();
     if (column.isEmpty()) {
       throw new NoSuchElementException(
-          "There is no column '" + columnName + "' in table  '" + table.getName() + "'");
+          "There is no column '" + columnName + "' in database  '" + table.getName() + "'");
     }
     int index = table.getColumnsAsList().indexOf(column.get());
     return Optional.ofNullable(data.get(index));

@@ -1,25 +1,23 @@
 package de.riegraf.juson.converter;
 
-import de.riegraf.juson.exception.JusonException;
-import de.riegraf.juson.utils.table.Column;
-import de.riegraf.juson.utils.table.Record;
-import de.riegraf.juson.utils.table.Table;
+import de.riegraf.juson.utils.database.Column;
+import de.riegraf.juson.utils.database.Database;
+import de.riegraf.juson.utils.database.Record;
+import de.riegraf.juson.utils.database.Table;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class JusonConverter {
+public class JusonConverter implements Converter {
 
   /*
    *
-   * TODO: Currently, the table structure is determined only by the first element in the array. This leads to problems when the objects in the array differ.
+   * TODO: Currently, the database structure is determined only by the first element in the array. This leads to problems when the objects in the array differ.
    *
    * */
 
@@ -34,20 +32,20 @@ public class JusonConverter {
     this.schema = schema;
   }
 
-  public Database convert(String filename, String json) throws JusonException {
+  public Database convert(String outerName, Object json) {
 
-    if (json.startsWith("{")) {
-      handleJsonObject(filename.replace(".json", ""), new JSONObject(json));
-    } else if (json.startsWith("[")) {
-      handleJsonArray(filename.replace(".json", ""), new JSONArray(json), null, null);
+    if (json instanceof JSONObject) {
+      handleJsonObject(outerName, (JSONObject) json);
+    } else if (json instanceof JSONArray) {
+      handleJsonArray(outerName, (JSONArray) json, null, null);
     } else {
-      throw new JusonException("No valid json. " + json);
+      throw new IllegalArgumentException("Argument has to be a JSONObject or an JSONArray.");
     }
     return new Database(tables, records);
+
   }
 
-  private void handleJsonArray(String name, JSONArray jArray, String parentName, String parentId)
-      throws JSONException, JusonException {
+  private void handleJsonArray(String name, JSONArray jArray, String parentName, String parentId) {
 
     if (jArray.length() < 1) {
       return;
@@ -55,7 +53,7 @@ public class JusonConverter {
 
     Object child0 = jArray.get(0);
 
-    // Crate table
+    // Crate database
     if (getTable(name).isEmpty()) {
       Table table = new Table(name.toLowerCase(), schema);
       if (parentName != null) {
@@ -72,7 +70,7 @@ public class JusonConverter {
           if (o instanceof JSONObject) {
             table.addColumn(new Column((arr.getString(j) + ID_EXTENSION), DATATYPE));
           } else if (o instanceof JSONArray) {
-            // No need to create column for id, because the id is stored in an additional assignment table
+            // No need to create column for id, because the id is stored in an additional assignment database
           } else {
             table.addColumn(new Column(arr.getString(j), DATATYPE));
           }
@@ -84,7 +82,7 @@ public class JusonConverter {
 
         // Array contains another array
       } else if (child0 instanceof JSONArray) {
-        throw new JusonException("Nested arrays can not be mapped.");
+        throw new RuntimeException("Nested arrays can not be mapped.");
 
         // Childs in array are value nodes
       } else {
@@ -139,10 +137,9 @@ public class JusonConverter {
     tables.add(AtoB);
   }
 
-  private void handleJsonObject(String jsonName, JSONObject jObject)
-      throws JSONException, JusonException {
+  private void handleJsonObject(String jsonName, JSONObject jObject) {
 
-    // Create table
+    // Create database
     if (getTable(jsonName).isEmpty()) {
       JSONArray arr = jObject.names();
       Table table = new Table(jsonName.toLowerCase(), schema);
@@ -212,22 +209,4 @@ public class JusonConverter {
   }
 
 
-  public static class Database {
-
-    private List<Table> tables;
-    private List<Record> records;
-
-    public List<Table> getTables() {
-      return tables;
-    }
-
-    public List<Record> getRecords() {
-      return records;
-    }
-
-    public Database(List<Table> tables, List<Record> records) {
-      this.tables = tables;
-      this.records = records;
-    }
-  }
 }

@@ -1,6 +1,6 @@
 package de.riegraf.juson.database;
 
-import de.riegraf.juson.utils.table.Table;
+import de.riegraf.juson.utils.database.Table;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -72,7 +72,7 @@ public class MySQL implements DatabaseConnection {
   }
 
   /**
-   * Builds a SQL statement to insert the table data into the de.riegraf.juson.database.
+   * Builds a SQL statement to insert the database data into the de.riegraf.juson.database.
    *
    * @return List of statements
    */
@@ -92,7 +92,7 @@ public class MySQL implements DatabaseConnection {
 
 
   /**
-   * Builds a SQL statement to create the table.
+   * Builds a SQL statement to create the database.
    *
    * @return The statement
    */

@@ -1,6 +1,6 @@
 package de.riegraf.juson.database;
 
-import de.riegraf.juson.utils.table.Table;
+import de.riegraf.juson.utils.database.Table;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

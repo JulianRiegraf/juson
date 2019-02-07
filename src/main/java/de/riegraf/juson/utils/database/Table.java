@@ -1,4 +1,4 @@
-package de.riegraf.juson.utils.table;
+package de.riegraf.juson.utils.database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Represents a de.riegraf.juson.database table. Does NOT hold any data.
+ * Represents a de.riegraf.juson.database database. Does NOT hold any data.
  */
 public class Table {
 
@@ -62,7 +62,7 @@ public class Table {
   public void addColumn(Column newColumn) {
     if (getColumn(newColumn.name).isPresent()) {
       throw new IllegalArgumentException(
-          "Column '" + newColumn.name + "' exists already in table '" + this.name + "'");
+          "Column '" + newColumn.name + "' exists already in database '" + this.name + "'");
     }
     columns.put(columns.size(), newColumn);
   }
